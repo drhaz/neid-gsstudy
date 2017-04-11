@@ -8,9 +8,9 @@ set(SOURCE_FILES
 
 add_executable(nessi_guidestar ${SOURCE_FILES})
 
-include_directories(/Users/harbeck/Software/cfitsio/include)
+include_directories(/usr/local/include)
 
 
-link_directories(/Users/harbeck/Software/cfitsio/lib)
+link_directories(/usr/local/lib)
 
-target_link_libraries(nessi_guidestar cfitsio)
+target_link_libraries(nessi_guidestar cfitsio m)
