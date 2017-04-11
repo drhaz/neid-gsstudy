@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include "fitsio.h"
 
+// TOBUILD: gcc -g -I/usr/local/opt/cfitsio3.410/include/ -L/usr/local/opt/cfitsio3.410/lib/ get_fits_pixels.c -o test -lm -lcfitsio
+// Does not nessesarily work, yet.
+
+#define MAXAXES 3
+
 int main(int argc, char *argv[])
 {
     fitsfile *file_pointer; 
@@ -15,10 +20,12 @@ int main(int argc, char *argv[])
 
     if (!fits_open_file(&file_pointer, argv[1], READONLY, &status))
     {
-        if (!fits_get_img_param(file_pointer, 2, &bits_per_pixel, &number_of_axies, naxes, &status) )
+        if (!fits_get_img_param(file_pointer, MAXAXES, &bits_per_pixel, &number_of_axies, naxes, &status) )
         {
-          if (number_of_axies > 2 || number_of_axies == 0)
-             printf("Error: only 1D or 2D images are supported\n");
+          if (number_of_axies < MAXAXES)
+          {
+             printf("Error: only D images are supported\n");
+          }
           else
           {
             /* get memory for 1 row */
