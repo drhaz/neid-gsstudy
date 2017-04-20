@@ -6,11 +6,18 @@ set(CMAKE_CXX_STANDARD 11)
 set(SOURCE_FILES
         src/readnessi.c)
 
+set(TEST_FILES
+        src/load_pixels.c
+        src/load_pixels.h
+   )
+
 add_executable(nessi_guidestar ${SOURCE_FILES})
 
-include_directories(/usr/local/include)
+add_executable(testo ${TEST_FILES})
 
+include_directories(/usr/local/include)
 
 link_directories(/usr/local/lib)
 
 target_link_libraries(nessi_guidestar cfitsio m)
+target_link_libraries(testo cfitsio m)

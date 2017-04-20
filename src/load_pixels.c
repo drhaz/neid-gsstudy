@@ -6,6 +6,7 @@
 int main(int argc, char *argv[])
 {
     double *test = load_pixels(argv[1]);
+    printf("hi");
 }
 
 double * make_1D_double_matrix(int xsize, int ysize)
@@ -118,7 +119,7 @@ double * load_pixels(char *filename)
                {
                    printf(format, pixels[index_incr]);   /* print each pixel */
                    return_pixels[( fpixel[1] - 1) ][index_incr] = pixels[index_incr];
-                   return_1D_pixels[( fpixel[1] - 1) % index_incr] = pixels[index_incr];
+                   return_1D_pixels[ (128 * (fpixel[1] - 1)) + index_incr ] = pixels[index_incr];
                }
                printf("\n");
             }
@@ -134,6 +135,6 @@ double * load_pixels(char *filename)
     }
 
     //return(status);
-    return(null);
+    return(return_1D_pixels);
 }
 
