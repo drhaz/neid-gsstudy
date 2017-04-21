@@ -1,14 +1,18 @@
 #include "load_pixels.h"
 
-// TOBUILD: gcc -g -I/usr/local/opt/cfitsio3.410/include/ -L/usr/local/opt/cfitsio3.410/lib/ load_pixels.c -o test -lm -lcfitsio
-// Does not nessesarily work, yet.
+// TOBUILD: gcc -g -I/usr/local/include/ -L/usr/local/lib/ load_pixels.c -o testo -lm -lcfitsio
 
+// The main loop. Process one image in fits file.
 int main(int argc, char *argv[])
 {
     double *test = load_pixels(argv[1]);
-    printf("hi");
+
+    print_pixels(test);
+
+    free_1D_matrix(test);
 }
 
+/* Make a double array. */
 double * make_1D_double_matrix(int xsize, int ysize)
 {
     double *x = malloc((ysize * xsize) * sizeof(double*));
@@ -16,6 +20,24 @@ double * make_1D_double_matrix(int xsize, int ysize)
     return x;
 }
 
+/* Print the pixels in a readable format. */
+void print_pixels(double *pixels)
+{
+    int x, y = 0;
+    
+    for (y = 0; y <= YDIM; y++)
+    {
+        for (x = 0; x <= XDIM; x++)
+        {
+            printf("%i, ", (int) pixels[ (128 * y) + x ] );
+        }
+            printf("\n");
+
+    }
+
+}
+
+/* Free 1D array. */
 void free_1D_matrix(double *x)
 {
 
@@ -24,6 +46,7 @@ void free_1D_matrix(double *x)
     return;
 }
 
+/* Make a 2D double array. */
 double ** make_double_matrix(int xsize, int ysize)
 {
     double **x = malloc(ysize * sizeof(double*));
@@ -38,6 +61,7 @@ double ** make_double_matrix(int xsize, int ysize)
     return x;
 }
 
+/* Free 2D array. */
 void free_matrix(double **x, int ysize)
 {
 
@@ -53,6 +77,7 @@ void free_matrix(double **x, int ysize)
     return;
 }
 
+/* Load the pixels from the fits file into a double array. */
 double * load_pixels(char *filename)
 {
     fitsfile *file_pointer; 
@@ -64,7 +89,6 @@ double * load_pixels(char *filename)
     double *pixels;
     double **return_pixels;
     double *return_1D_pixels;
-    char format[20], header_format[20];
 
     if (!fits_open_file(&file_pointer, filename, READONLY, &status))
     {
@@ -77,35 +101,16 @@ double * load_pixels(char *filename)
           else
           {
 
-            return_pixels = make_double_matrix(naxes[0], naxes[1]);
             return_1D_pixels = make_1D_double_matrix(naxes[0], naxes[1]);
 
             /* get memory for 1 row */
             pixels = (double *) malloc(naxes[0] * sizeof(double));
 
-            if (pixels == NULL) 
+            if ((pixels == NULL) || (return_1D_pixels == NULL))
             {
                 printf("Memory allocation error\n");
                 return(null);
             }
-
-            if (bits_per_pixel > 0)  /* set the default output format string */
-            {
-               strcpy(header_format, " %7d");
-               strcpy(format,   " %7.0f");
-            } 
-            else 
-            {
-               strcpy(header_format, " %15d");
-               strcpy(format,   " %15.5f");
-            }
-
-            printf("print column header\n      ");          /* print column header */
-            for (index_incr = 1; index_incr <= naxes[0]; index_incr++)
-            {
-                printf(header_format, index_incr);
-            }
-            printf("print column header\n"); 
 
             /* loop over all the rows in the image, top to bottom */
             for (fpixel[1] = naxes[1]; fpixel[1] >= 1; fpixel[1]--)
@@ -113,15 +118,10 @@ double * load_pixels(char *filename)
                if (fits_read_pix(file_pointer, TDOUBLE, fpixel, naxes[0], NULL, pixels, NULL, &status) )  /* read row of pixels */
                   break;  /* error */
 
-               printf("row number %4d ",fpixel[1]);  /* print row number */
-
                for (index_incr = 0; index_incr < naxes[0]; index_incr++)
                {
-                   printf(format, pixels[index_incr]);   /* print each pixel */
-                   return_pixels[( fpixel[1] - 1) ][index_incr] = pixels[index_incr];
                    return_1D_pixels[ (128 * (fpixel[1] - 1)) + index_incr ] = pixels[index_incr];
                }
-               printf("\n");
             }
             free(pixels);  /* Housekeeping! */
           }
@@ -134,7 +134,6 @@ double * load_pixels(char *filename)
        fits_report_error(stderr, status); /* print error */
     }
 
-    //return(status);
     return(return_1D_pixels);
 }
 
