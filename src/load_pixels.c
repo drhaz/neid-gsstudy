@@ -2,20 +2,10 @@
 
 // TOBUILD: gcc -g -I/usr/local/include/ -L/usr/local/lib/ load_pixels.c -o testo -lm -lcfitsio
 
-// The main loop. Process one image in fits file.
-int main(int argc, char *argv[])
-{
-    double *test = load_pixels(argv[1]);
-
-    print_pixels(test);
-
-    free_1D_matrix(test);
-}
-
 /* Make a double array. */
 double * make_1D_double_matrix(int xsize, int ysize)
 {
-    double *x = malloc((ysize * xsize) * sizeof(double*));
+    double *x = malloc((ysize * xsize) * sizeof(double));
 
     return x;
 }
