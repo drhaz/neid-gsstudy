@@ -7,7 +7,17 @@
 #define MARGY	4
 #define FWHMSIG 2.35482005
 
-extern char * timestamp(char * buf);
+//char * timestamp(char * str) {
+//        struct timeval tv;
+//        long int tz;
+//        struct tm *tm;
+//        gettimeofday(&tv, &tz);
+//        tm = localtime(&tv.tv_sec);
+//        sprintf(str, "%08x: %02d:%02d:%02d %d", pthread_self(), tm->tm_hour,
+//                        tm->tm_min, tm->tm_sec, tv.tv_usec);
+//        return str + strlen(str);
+//}
+
 
 // A macro for the default access pattern to ODI image buffers.
 
@@ -140,8 +150,8 @@ void centroid_us(unsigned short * image, unsigned short * max, int winx, int win
   char buffer[256];
   char * next;
 
-  next = timestamp(buffer);
-  sprintf(next," winx %d centroid brightest: %d %d %d sky %f skyvar %f\n", winx, max_col +1, max_row +1, *max, sky, skyvar) ;
+  // next = timestamp(buffer);
+  //sprintf(next," winx %d centroid brightest: %d %d %d sky %f skyvar %f\n", winx, max_col +1, max_row +1, *max, sky, skyvar) ;
   printf(buffer); fflush(stdout);
 
   float sum_xf = 0;
@@ -206,8 +216,8 @@ void centroid_us(unsigned short * image, unsigned short * max, int winx, int win
   *yctr = (float)sum_yf / sum_f + 1;
   *sigma = 2 * sqrt((float) num / 3.14159265) / FWHMSIG;
 
-  next = timestamp(buffer);
-  sprintf(next," xcenter %f ycenter %f\n", *xctr, *yctr);
+  // next = timestamp(buffer);
+  // sprintf(next," xcenter %f ycenter %f\n", *xctr, *yctr);
   printf(buffer); fflush(stdout);
 }
 
@@ -234,9 +244,12 @@ void centroid_f(float * image, float * max, int winx, int winy, float sky, float
   char buffer[256];
   char * next;
 
-  next = timestamp(buffer);
-  sprintf(next," winx %d centroid brightest: %d %d max %f sky %f skyvar %f\n", winx, max_col +1, max_row +1, *max, sky, skyvar) ;
-  printf(buffer); fflush(stdout);
+  //next = timestamp(buffer);
+  //sprintf(next," winx %d centroid brightest: %d %d max %f sky %f skyvar %f\n", winx, max_col +1, max_row +1, *max, sky, skyvar) ;
+  printf(" winx %d centroid brightest: %d %d max %f sky %f skyvar %f\n", winx, max_col +1, max_row +1, *max, sky, skyvar) ;
+  //printf(buffer); fflush(stdout);
+  fflush(stdout);
+
 
   float sum_xf = 0;
   float sum_yf = 0;
@@ -300,8 +313,8 @@ void centroid_f(float * image, float * max, int winx, int winy, float sky, float
   *yctr = (float)sum_yf / sum_f + 1;
   *sigma = 2 * sqrt((float) num / 3.14159265) / FWHMSIG;
 
-  next = timestamp(buffer);
-  sprintf(next," xcenter %f ycenter %f\n", *xctr, *yctr);
+  // next = timestamp(buffer);
+  //sprintf(next," xcenter %f ycenter %f\n", *xctr, *yctr);
   printf(buffer); fflush(stdout);
 }
 
@@ -328,8 +341,8 @@ void centroid_l(long * image, long * max, int winx, int winy, float sky, float s
   char buffer[256];
   char * next;
 
-  next = timestamp(buffer);
-  sprintf(next," winx %d centroid brightest: %d %d %d sky %f skyvar %f\n", winx, max_col +1, max_row +1, *max, sky, skyvar) ;
+  //next = timestamp(buffer);
+  //sprintf(next," winx %d centroid brightest: %d %d %d sky %f skyvar %f\n", winx, max_col +1, max_row +1, *max, sky, skyvar) ;
   printf(buffer); fflush(stdout);
 
   float sum_xf = 0;
@@ -394,8 +407,8 @@ void centroid_l(long * image, long * max, int winx, int winy, float sky, float s
   *yctr = (float)sum_yf / sum_f + 1;
   *sigma = 2 * sqrt((float) num / 3.14159265) / FWHMSIG;
 
-  next = timestamp(buffer);
-  sprintf(next," xcenter %f ycenter %f\n", *xctr, *yctr);
+  //next = timestamp(buffer);
+  //sprintf(next," xcenter %f ycenter %f\n", *xctr, *yctr);
   printf(buffer); fflush(stdout);
 }
 

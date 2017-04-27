@@ -3,14 +3,17 @@ project(nessi_guidestar)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES
-        src/readnessi.c)
+set(EXTREME_SOURCE1
+        src/momentCentroid.c
+        src/load_pixels.c
+        src/load_pixels.h
+        src/nessi-cent.c
+   )
 
-add_executable(nessi_guidestar ${SOURCE_FILES})
+add_executable(extreme-nessi-cent ${EXTREME_SOURCE1})
 
-include_directories(/Users/harbeck/Software/cfitsio/include)
+include_directories(/usr/local/include /usr/include/libxml2)
 
+link_directories(/usr/local/lib /usr/lib/x86_64-linux-gnu/)
 
-link_directories(/Users/harbeck/Software/cfitsio/lib)
-
-target_link_libraries(nessi_guidestar cfitsio)
+target_link_libraries(extreme-nessi-cent cfitsio m)
