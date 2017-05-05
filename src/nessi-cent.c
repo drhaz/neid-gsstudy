@@ -9,19 +9,17 @@ int main(int argc, char *argv[])
 {
     float *test = load_pixels(argv[1]);
     float *test_original = load_pixels(argv[1]);
-    //float *test_original = copyfArray(test);
 
-    //arrayCMPFF(test, test_original);
-
-    //printf("\nFrom Main #1 %X \n", (int) test);
     doCentroid(test);
     doCentroid(test);
-//    arrayCMPFF(test, test_original);
     printf("\n \n");
 
-    //printf("\nFrom Main #2 %X \n", test_original);
     doCentroid(test_original);
- //   arrayCMPFF(test, test_original);
     printf("\n \n");
+
+//    remove("frame1.fits");
+//    remove("frame2.fits");
+//    writeFits("frame1.fits", test);
+//    writeFits("frame2.fits", test_original);
 }
 

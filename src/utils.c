@@ -2,10 +2,9 @@
 #include "centroid.h"
 
 // TOBUILD: gcc -g -I/usr/local/include/ -L/usr/local/lib/ load_pixels.c -o testo -lm -lcfitsio
-/*
+
 float * dtofArray(double *pixels)
 {
-    int x = 0;
     int y = 0;
 
     float *z =  (float *) malloc((YDIM * XDIM) * sizeof(float));
@@ -21,7 +20,6 @@ float * dtofArray(double *pixels)
 
 void arrayCMPFF(float *pixels1, float *pixels2)
 {
-    int x = 0; 
     int y = 0;
 
 
@@ -37,7 +35,6 @@ void arrayCMPFF(float *pixels1, float *pixels2)
 
 void arrayCMPDD(double *pixels1, double *pixels2)
 {
-    int x = 0; 
     int y = 0;
 
 
@@ -53,7 +50,6 @@ void arrayCMPDD(double *pixels1, double *pixels2)
 
 void arrayCMPDF(double *pixels1, float *pixels2)
 {
-    int x = 0; 
     int y = 0;
 
 
@@ -69,7 +65,6 @@ void arrayCMPDF(double *pixels1, float *pixels2)
 
 double * copyDArray(double *pixels)
 {
-    int x = 0; 
     int y = 0;
 
     double *z =  (double *) malloc((YDIM * XDIM) * sizeof(double));
@@ -85,7 +80,6 @@ double * copyDArray(double *pixels)
 
 float * copyfArray(float *pixels)
 {
-    int x = 0; 
     int y = 0;
 
     float *z =  (float *) malloc((YDIM * XDIM) * sizeof(float));
@@ -152,7 +146,7 @@ void free_matrix(double **x, int ysize)
 
     return;
 }
-*/
+
 
 void printPhotom(Photometry * photom) {
         printf( "photometry: \t momentx %f momenty %f flux %f back %f fwhm_x %f \n",
@@ -226,3 +220,38 @@ void doCentroid(float *pixels)
 
 }
 
+bool writeFits(char *filename, float *pixels)
+{
+
+    int status= 0;
+    fitsfile *file_pointer;
+    int naxis = 2;
+    long naxes[2] = {XDIM,YDIM}, fpixel[2] = {1,1};
+    bool isok = true;
+
+    if (fits_create_file(&file_pointer, filename, &status)) 
+    {
+        isok = false;
+        fits_report_error(stderr, status);
+    }
+
+    if (fits_create_img(file_pointer,  FLOAT_IMG, naxis, naxes, &status))
+    {
+        isok = false;
+        fits_report_error(stderr, status);
+    }
+
+    if (fits_write_pix(file_pointer, TFLOAT, fpixel, YDIM * XDIM, pixels, &status))
+    {
+        isok = false;
+        fits_report_error(stderr, status);
+    }
+
+    if(fits_close_file(file_pointer, &status))
+    {
+        isok = false;
+         fits_report_error(stderr, status);
+   }
+
+    return isok;
+}

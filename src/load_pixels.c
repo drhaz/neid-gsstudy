@@ -20,6 +20,7 @@ float * load_pixels(char *filename)
     {
         if (!fits_get_img_param(file_pointer, MAXAXES, &bits_per_pixel, &number_of_axies, naxes, &status) )
         {
+printf("%i\n", bits_per_pixel);
           if (number_of_axies < MAXAXES)
           {
              printf("Error: only D images are supported\n");
