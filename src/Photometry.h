@@ -12,6 +12,8 @@ typedef struct Photometry
   float skyVar;
   /** Estiamted signal to noise of star */
   float sigNoise;
+  /** Better Estiamted signal to noise of star */
+  float betterSigNoise;
   /** Estimated detection probability in sigma */
   float sigma;
 
@@ -58,5 +60,4 @@ typedef struct Photometry
   double tstamp;
 
 } Photometry;
-#define NPHOTOM	20
 #endif /* PHOTOMETRY_H */

@@ -180,6 +180,7 @@ void centroid(void * image, int bitpix, int minX, int minY, int maxX, int maxY,
 	photom->Peak = max; // should be same as photom max
 	photom->Roundness = (fwhmX - fwhmY) / (fwhmX + fwhmY);
 	photom->MomentXY = momentXY;
+    photom->betterSigNoise = photom->Flux / (sqrt((pow(nPixels * photom->skyVar, 2) +  photom->Flux)));
 }
 
 /**

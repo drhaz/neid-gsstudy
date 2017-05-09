@@ -4,9 +4,9 @@
 // TOBUILD: gcc -g -I/usr/local/include/ -L/usr/local/lib/ load_pixels.c -o testo -lm -lcfitsio
 
 void printPhotom(Photometry * photom) {
-        printf( "photometry: \t momentx %f momenty %f flux %f back %f fwhm_x %f \n",
+        printf( "photometry: \t momentx %f momenty %f flux %f back %f fwhm_x %f sigNoise %f \n",
                 photom->xctr, photom->yctr, photom->Flux, photom->skyValue,
-                photom->FWHM_X);
+                photom->FWHM_X, photom->betterSigNoise);
 }
 
 void initPhotom(Photometry *photom)
@@ -50,6 +50,8 @@ void initPhotom(Photometry *photom)
 
     photom->tstamp = 0.0;    /** time stamp of guide video */
 
+    photom->betterSigNoise = 0.0;
+
 }
 
 void doCentroid(double *pixels)
@@ -61,7 +63,6 @@ void doCentroid(double *pixels)
     Photometry photom;
 
     initPhotom(&photom);
-    printf("Photometry %lu, photom %lu\n", sizeof(Photometry), sizeof(photom));
 
     //findSky(pixels, FLOAT_IMG, 128, 128, 1, 8, photom);
     findSky(pixels, DOUBLE_IMG, 128, 128, 1, 8, &photom);
