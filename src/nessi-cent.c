@@ -7,14 +7,55 @@
 // The main loop. Process one image in fits file.
 int main(int argc, char *argv[])
 {
-    float *test = load_pixels(argv[1]);
-    float *test_original = load_pixels(argv[1]);
+    double return_1D_pixels_f[(128 * 128) * sizeof(float)];
+    double *test = load_pixels(argv[1], return_1D_pixels_f);
+    //float *test_original = load_pixels(argv[1], return_1D_pixels_f);
 
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
     doCentroid(test);
-    doCentroid(test);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
+    doCentroid(return_1D_pixels_f);
     printf("\n \n");
 
-    doCentroid(test_original);
+    //doCentroid(test_original);
     printf("\n \n");
 
 //    remove("frame1.fits");

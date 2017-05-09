@@ -30,7 +30,7 @@ void free_matrix(double **x, int ysize);
 
 void printPhotom(Photometry * photom); 
 
-void doCentroid(float *pixels);
+void doCentroid(double *pixels);
 
 typedef int bool;
 #define true 1

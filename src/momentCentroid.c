@@ -18,15 +18,21 @@ extern char * timestamp(char * buf);
 
 #define array_index(image, x, y, winx, winy) ((image) + (y) * winx + (x))
 
-inline float get_array_float(void * image, int bitpix, int x, int y, int winx,
+//inline float get_array_float(void * image, int bitpix, int x, int y, int winx,
+float get_array_float(void * image, int bitpix, int x, int y, int winx,
 		int winy) {
 	float val = 0;
 	float * ptr_f;
+	double * ptr_d;
 	long * ptr_l;
 	unsigned long * ptr_ul;
 	short * ptr_s;
 	unsigned short * ptr_us;
 	switch (bitpix) {
+	case DOUBLE_IMG:
+		ptr_d = array_index(((double * )image), x, y, winx, winy);
+		val = *ptr_d;
+		break;
 	case FLOAT_IMG:
 		ptr_f = array_index(((float * )image), x, y, winx, winy);
 		val = *ptr_f;
