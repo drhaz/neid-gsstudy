@@ -18,17 +18,23 @@ extern char * timestamp(char * buf);
 
 #define array_index(image, x, y, winx, winy) ((image) + (y) * winx + (x))
 
-inline float get_array_float(void * image, int bitpix, int x, int y, int winx,
+//inline double get_array_float(void * image, int bitpix, int x, int y, int winx,
+double get_array_float(void * image, int bitpix, int x, int y, int winx,
 		int winy) {
-	float val = 0;
-	float * ptr_f;
+	double val = 0;
+	double * ptr_f;
+	double * ptr_d;
 	long * ptr_l;
 	unsigned long * ptr_ul;
 	short * ptr_s;
 	unsigned short * ptr_us;
 	switch (bitpix) {
+	case DOUBLE_IMG:
+		ptr_d = array_index(((double * )image), x, y, winx, winy);
+		val = *ptr_d;
+		break;
 	case FLOAT_IMG:
-		ptr_f = array_index(((float * )image), x, y, winx, winy);
+		ptr_f = array_index(((double * )image), x, y, winx, winy);
 		val = *ptr_f;
 		break;
 	case LONG_IMG:
@@ -56,10 +62,10 @@ inline float get_array_float(void * image, int bitpix, int x, int y, int winx,
 
 void centroid(void * image, int bitpix, int minX, int minY, int maxX, int maxY,
 		int winx, int winy, Photometry * photom) {
-	float SigmaThres = 3.;
-	float sky = photom->skyValue;
-	float peakflux = photom->max - sky;
-	float noise = photom->backNoise;
+	double SigmaThres = 3.;
+	double sky = photom->skyValue;
+	double peakflux = photom->max - sky;
+	double noise = photom->backNoise;
 
 	double totalFlux = 0;
 	long nPixels = 0;
@@ -80,7 +86,7 @@ void centroid(void * image, int bitpix, int minX, int minY, int maxX, int maxY,
 		maxY = winy;
 
 	// One sanity check: is the threshold compatible with the noise?
-	float dr = peakflux;
+	double dr = peakflux;
 	photom->sigNoise = 0;
 	if (noise > 0) {
 		dr /= noise;
@@ -92,7 +98,7 @@ void centroid(void * image, int bitpix, int minX, int minY, int maxX, int maxY,
 		printf("WARNING: BAD photometry!\n");
 	}
 
-	float minimumFlux = noise * SigmaThres;
+	double minimumFlux = noise * SigmaThres;
 	double momentXX = 0;
 	double momentYY = 0;
 	double momentXY = 0;
@@ -105,7 +111,7 @@ void centroid(void * image, int bitpix, int minX, int minY, int maxX, int maxY,
 		int yy = 0;
 		for (yy = minY; yy < maxY - 1; yy++) {
 
-			float pixelFlux = get_array_float(image, bitpix, xx, yy, winx,
+			double pixelFlux = get_array_float(image, bitpix, xx, yy, winx,
 					winy);
 			// while we are iterating anyways we can as well improve the peak estimate.:
 			if (pixelFlux > max) {
@@ -117,8 +123,8 @@ void centroid(void * image, int bitpix, int minX, int minY, int maxX, int maxY,
 			if (pixelFlux >= minimumFlux) {
 				// TODO: should this be summed outside the noise threshold?
 				stellarFlux += pixelFlux;
-				centerX += pixelFlux * (float) xx;
-				centerY += pixelFlux * (float) yy;
+				centerX += pixelFlux * (double) xx;
+				centerY += pixelFlux * (double) yy;
 
 				totalFlux += pixelFlux;
 				nPixels++;
@@ -142,15 +148,15 @@ void centroid(void * image, int bitpix, int minX, int minY, int maxX, int maxY,
 	for (xx = minX; xx < maxX - 1; xx++) {
 		int yy = 0;
 		for (yy = minY; yy < maxY - 1; yy++) {
-			float flux = get_array_float(image, bitpix, xx, yy, winx, winy);
+			double flux = get_array_float(image, bitpix, xx, yy, winx, winy);
 			flux -= sky;
 
 			if (flux >= minimumFlux) {
 				double dx = xx - centerX;
 				double dy = yy - centerY;
-				momentXX += flux * (float) (dx * dx);
-				momentYY += flux * (float) (dy * dy);
-				momentXY += flux * (float) (dx * dy);
+				momentXX += flux * (double) (dx * dx);
+				momentYY += flux * (double) (dy * dy);
+				momentXY += flux * (double) (dx * dy);
 			}
 		}
 	}
@@ -174,6 +180,7 @@ void centroid(void * image, int bitpix, int minX, int minY, int maxX, int maxY,
 	photom->Peak = max; // should be same as photom max
 	photom->Roundness = (fwhmX - fwhmY) / (fwhmX + fwhmY);
 	photom->MomentXY = momentXY;
+    photom->betterSigNoise = photom->Flux / (sqrt((pow(nPixels * photom->skyVar, 2) +  photom->Flux)));
 }
 
 /**
@@ -189,11 +196,11 @@ void findSky(void *image, int bitpix, int winx, int winy, int skydelta,
 	assert(skyband != 0); // otherwise div/0 err
 
 	double sums[] = { 0, 0, 0, 0 }; // will hold the sky values in the corners
-	double nPixels[4];
+	double nPixels[4] = { 0.0, 0.0, 0.0, 0.0 };
 
-	float min = get_array_float(image, bitpix, 0, 0, winx, winy);
+	double min = get_array_float(image, bitpix, 0, 0, winx, winy);
 
-	float max = min;
+	double max = min;
 	//int maxIndex = 0;
 	// We do one pass over the whole array to find the peak value. In the
 	// same pass we sum the flux in little squares in the corners to
@@ -201,7 +208,7 @@ void findSky(void *image, int bitpix, int winx, int winy, int skydelta,
 	int xx = 0, yy = 0;
 	for (yy = 0; yy < winy; yy++) {
 		for (xx = 0; xx < winx; xx++) {
-			float imageValue = get_array_float(image, bitpix, xx, yy, winx,
+			double imageValue = get_array_float(image, bitpix, xx, yy, winx,
 					winy);
 
 			if (imageValue > 0 && imageValue < SATURATION_LIMIT) {
@@ -293,7 +300,7 @@ void findSky(void *image, int bitpix, int winx, int winy, int skydelta,
 	// min03 is min of sums[0-3]
 	// printf("sky median filt max %d med03a %d med03b %d min %d\n",max03, med03a, med03b, min03);
 
-	float skyValue = (sums[med03a] + sums[med03b]) / 2.0;
+	double skyValue = (sums[med03a] + sums[med03b]) / 2.0;
 	photom->skyValue = skyValue;
 
 	// now determine noise of sky in a second pass
@@ -301,7 +308,10 @@ void findSky(void *image, int bitpix, int winx, int winy, int skydelta,
 	// Reset the nPixels for the second pass
 	double variance[4];
 	for (ii = 0; ii < 4; ii++)
+    {
 		nPixels[ii] = 0;
+		variance[ii] = 0.0;
+    }
 
 	double v = 0;
 
@@ -354,19 +364,3 @@ void findSky(void *image, int bitpix, int winx, int winy, int skydelta,
 
 	photom->sigma = MeanVariance > 0 ? (max - skyValue) / MeanVariance : 0;
 }
-
-//int init_photom(xmlDocPtr doc, Photometry * photometry, int photsize) {
-//	float thresh = 5.0f;
-//	char nodeSelector[200];
-//	sprintf(nodeSelector, "//scriptingParameters/expose/snThreshold/text()");
-//	int err = 0;
-//	char * val = getStrContent(doc, nodeSelector, &err);
-//	if (val != NULL) {
-//		thresh = atof(val);
-//	}
-//	int i = 0;
-//	for (i = 0; i < photsize; i++) {
-//		photometry[i].snThreshold = thresh;
-//	}
-//	return 0;
-//}
