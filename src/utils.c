@@ -61,7 +61,7 @@ void doCentroid(double *pixels)
     Photometry photom;
 
     initPhotom(&photom);
-//    printf("Photometry %lu, photom %lu\n", sizeof(Photometry), sizeof(photom));
+    printf("Photometry %lu, photom %lu\n", sizeof(Photometry), sizeof(photom));
 
     //findSky(pixels, FLOAT_IMG, 128, 128, 1, 8, photom);
     findSky(pixels, DOUBLE_IMG, 128, 128, 1, 8, &photom);

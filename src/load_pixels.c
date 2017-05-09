@@ -10,13 +10,7 @@ double * load_pixels(char *filename, double *return_1D_pixels_f)
     int status = 0; 
     int bits_per_pixel;
     int number_of_axies;
-//    int index_incr;
     long naxes[3] = {1,1,1}, fpixel[3] = {1,1,1};
- //long naxes2[2] = {128,128}, fpixel2[2] = {1,1};
- //fitsfile *file_pointer2; 
- //   float return_1D_pixels_f[(128 * 128) * sizeof(float)];
-
-    //float *return_1D_pixels_f = null;
 
     if (!fits_open_file(&file_pointer, filename, READONLY, &status))
     {
@@ -47,10 +41,10 @@ double * load_pixels(char *filename, double *return_1D_pixels_f)
     }
 
 
-//    printf("Internal doCentroid(return_1D_pixels_f) #2;\n");
-//    doCentroid(return_1D_pixels_f);
-//
-//    printf("\n\n");
+    printf("Internal doCentroid(return_1D_pixels_f) #2;\n");
+    doCentroid(return_1D_pixels_f);
+
+    printf("\n\n");
 
     return(return_1D_pixels_f);
 }
