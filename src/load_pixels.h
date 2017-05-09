@@ -14,7 +14,7 @@
 #define MAXAXES 3
 #define null '\0'
 
-double * load_pixels(char *, int );
+double ** load_pixels(char * );
 
 void free_1D_matrix(double *);
 void print_pixels(double *);

@@ -57,22 +57,15 @@ void initPhotom(Photometry *photom)
 void doCentroid(double *pixels)
 {
 
-    //printf("pixels: %X \n", pixels);
-    //Photometry *photom = malloc(sizeof(Photometry));
-    //printf("Photometry %i, photom %i\n", sizeof(Photometry), sizeof(*photom));
     Photometry photom;
 
     initPhotom(&photom);
 
-    //findSky(pixels, FLOAT_IMG, 128, 128, 1, 8, photom);
     findSky(pixels, DOUBLE_IMG, 128, 128, 1, 8, &photom);
 
-    //centroid(pixels, FLOAT_IMG, 3, 3, 120, 120, 128,128, photom);
     centroid(pixels, DOUBLE_IMG, 3, 3, 120, 120, 128,128, &photom);
 
-    //printPhotom(photom);
     printPhotom(&photom);
-
 
 }
 
@@ -106,7 +99,7 @@ bool writeFits(char *filename, float *pixels)
     if(fits_close_file(file_pointer, &status))
     {
         isok = false;
-         fits_report_error(stderr, status);
+        fits_report_error(stderr, status);
    }
 
     return isok;

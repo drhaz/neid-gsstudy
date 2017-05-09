@@ -278,20 +278,22 @@ void findSky(void *image, int bitpix, int winx, int winy, int skydelta,
 		max23 = 3;
 		min23 = 2;
 	}
-	int max03, med03a;
+	int med03a;
+	//int max03, med03a;
 	if (sums[max01] > sums[max23]) {
-		max03 = max01;
+		//max03 = max01;
 		med03a = max23;
 	} else {
-		max03 = max23;
+		//max03 = max23;
 		med03a = max01;
 	}
-	int min03, med03b;
+	int med03b;
+	//int min03, med03b;
 	if (sums[min01] <= sums[min23]) {
-		min03 = min01;
+		//min03 = min01;
 		med03b = min23;
 	} else {
-		min03 = min23;
+		//min03 = min23;
 		med03b = min01;
 	}
 

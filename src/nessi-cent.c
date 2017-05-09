@@ -9,12 +9,14 @@ int main(int argc, char *argv[])
 {
     int ex;
 
+    double **test = load_pixels(argv[1]);
     for(ex = 0; ex < 1000; ex++)
     {
-        double *test = load_pixels(argv[1], ex);
-
-        doCentroid(test);
+        printf("%s:%i ", argv[1], ex);
+        doCentroid(test[ex]);
     }
+
+    printf("\n");
 
 //    remove("frame2.fits");
 //    writeFits("frame1.fits", test);
