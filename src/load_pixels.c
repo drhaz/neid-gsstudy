@@ -3,13 +3,6 @@
 
 // TOBUILD: gcc -g -I/usr/local/include/ -L/usr/local/lib/ load_pixels.c -o testo -lm -lcfitsio
 
-typedef struct nessi_frames
-{
-
-    double *frames[1000];
-
-} nessi_frames;
-
 /* Load the pixels from the fits file into a double array. */
 double ** load_pixels(char *filename)
 {
@@ -19,10 +12,9 @@ double ** load_pixels(char *filename)
     int ex;
     int bits_per_pixel;
     int number_of_axies;
-    nessi_frames *nFrames;
+    double **nFrames;
     long naxes[3] = {1,1,1}, fpixel[3] = {1,1,1};
 
-    nFrames  = (nessi_frames *) malloc(sizeof(nessi_frames));
 
     if (!fits_open_file(&file_pointer, filename, READONLY, &status))
     {
@@ -34,7 +26,9 @@ double ** load_pixels(char *filename)
           }
           else
           {
-            for(ex = 0; ex < 1000; ex++)
+            nFrames  = (double **) malloc(naxes[2] * sizeof(double *));
+
+            for(ex = 0; ex < naxes[2]; ex++)
             {
                return_1D_pixels_f  = (double *) malloc((naxes[0] * naxes[1]) * sizeof(double));
 
@@ -47,7 +41,7 @@ double ** load_pixels(char *filename)
                     fits_report_error(stderr, status); /* print error */
                 }
 
-               nFrames->frames[ex] = return_1D_pixels_f; 
+               nFrames[ex] = return_1D_pixels_f; 
             }
           }
         }
@@ -55,6 +49,6 @@ double ** load_pixels(char *filename)
 
     }
 
-    return( nFrames->frames);
+    return( nFrames);
 }
 
